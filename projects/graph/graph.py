@@ -33,10 +33,10 @@ class Graph:
 
         while queue.size() > 0:
             current_vertex = queue.dequeue()
-            visited.add(current_vertex)
-            print(current_vertex)
-            for neighbor in self.get_neighbors(current_vertex):
-                if neighbor not in visited:
+            if current_vertex not in visited:
+                visited.add(current_vertex)
+                print(current_vertex)
+                for neighbor in self.get_neighbors(current_vertex):
                     queue.enqueue(neighbor)
 
         return self
@@ -48,10 +48,10 @@ class Graph:
 
         while stack.size() > 0:
             current_vertex = stack.pop()
-            visited.add(current_vertex)
-            print(current_vertex)
-            for neighbor in self.get_neighbors(current_vertex):
-                if neighbor not in visited:
+            if current_vertex not in visited:
+                visited.add(current_vertex)
+                print(current_vertex)
+                for neighbor in self.get_neighbors(current_vertex):
                     stack.push(neighbor)
 
         return self
@@ -62,35 +62,65 @@ class Graph:
             visited.add(vertex)
             for neighbor in self.get_neighbors(vertex):
                 if neighbor not in visited:
-                    helper(neighbor)
+                    helper(neighbor, visited)
 
         helper(starting_vertex, set())
 
+        return self
+
     def bfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing the shortest path from
-        starting_vertex to destination_vertex in
-        breath-first order.
-        """
-        pass  # TODO
+        queue = Queue()
+        queue.enqueue([starting_vertex])
+        visited = set()
+
+        while queue.size() > 0:
+            current_path = queue.dequeue()
+            current_vertex = current_path[-1]
+            if current_vertex == destination_vertex:
+                return current_path
+            else:
+                visited.add(current_vertex)
+                for neighbor in self.get_neighbors(current_vertex):
+                    if neighbor not in visited:
+                        new_path = current_path.copy()
+                        new_path.append(neighbor)
+                        queue.enqueue(new_path)
 
     def dfs(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
-        """
-        pass  # TODO
+        stack = Stack()
+        stack.push([starting_vertex])
+        visited = set()
+
+        while stack.size() > 0:
+            current_path = stack.pop()
+            current_vertex = current_path[-1]
+            if current_vertex == destination_vertex:
+                return current_path
+            else:
+                visited.add(current_vertex)
+                for neighbor in self.get_neighbors(current_vertex):
+                    if neighbor not in visited:
+                        new_path = current_path.copy()
+                        new_path.append(neighbor)
+                        stack.push(new_path)
 
     def dfs_recursive(self, starting_vertex, destination_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
+        def helper(path, visited):
+            vertex = path[-1]
 
-        This should be done using recursion.
-        """
-        pass  # TODO
+            if vertex == destination_vertex:
+                return path
+            else:
+                visited.add(vertex)
+                for neighbor in self.get_neighbors(vertex):
+                    if neighbor not in visited:
+                        new_path = path.copy()
+                        new_path.append(neighbor)
+                        result = helper(new_path, visited)
+                        if result:
+                            return result
+
+        return helper([starting_vertex], set())
 
 
 if __name__ == '__main__':
