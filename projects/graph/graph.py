@@ -24,7 +24,7 @@ class Graph:
         return self
 
     def get_neighbors(self, vertex_id):
-        return self.vertices[vertex_id]
+        return self.vertices.get(vertex_id, set())
 
     def bft(self, starting_vertex):
         queue = Queue()
